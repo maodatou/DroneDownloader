@@ -11,6 +11,7 @@ public class Download {
     public String saveAdd = null;
     public String fileName = null;
     boolean fileNameIndex = true;
+    final static int len = 1024;
 
     Download(String userUrl, String saveAdd, String fileName,
             boolean fileNameIndex) {
@@ -21,6 +22,7 @@ public class Download {
     }
 
     public void download() {
+      
         try {
             if(this.userUrl == null)
                 return;
@@ -30,17 +32,14 @@ public class Download {
                 this.fileName = path.substring(path.lastIndexOf("/") + 1,
                         path.length());
             }
-            URLConnection con = url.openConnection();
             InputStream in = url.openStream();
             File file = new File(this.saveAdd, this.fileName);
             FileOutputStream out = new FileOutputStream(file);
-            int len = con.getContentLength();
             byte[] buffer = new byte[len];
-            int length = 0;
-            while (length != len) {
-                length += in.read(buffer, length, len - length);
-            }
-            out.write(buffer);
+            int hasRead;
+            while ((hasRead = in.read(buffer))>0) {
+               out.write(buffer, 0, hasRead);
+            }     
             in.close();
             out.close();
         } catch (Exception e) {
