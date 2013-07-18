@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         Command in = new Command();
         in.parse(args);
-        Download down = new Download(in.userUrl,in.saveAdd,in.fileName,in.fileNameIndex);
-        down.download();
+        Download down = new Download(in.userUrl,in.saveAdd,in.fileName,in.fileNameIndex,in.saveAddIndex);
+        down.downMain();
     }
 }

@@ -9,6 +9,7 @@ public class Command {
     public String saveAdd = null;
     public String fileName = null;
     public boolean fileNameIndex = true;
+    public boolean saveAddIndex = true;
 
     Command(){
         
@@ -34,6 +35,7 @@ public class Command {
                     break;
                 case 's':
                     this.saveAdd = args[++i];
+                    this.saveAddIndex = false;
                     break;
                 default:
                 }
