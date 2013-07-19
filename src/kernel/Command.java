@@ -5,21 +5,22 @@ public class Command {
             + "The option include:\n"
             + "  -f  name of downloaded file (default name:original name)\n"
             + "  -s  save address of downloaded file (default address: E:\\Workspace\\DroneDownloader)";
-    public String userUrl = null;
-    public String saveAdd = null;
+    public String userInputUrl = null;
+    public String filePath = null;
     public String fileName = null;
     public boolean fileNameIndex = true;
-    public boolean saveAddIndex = true;
+    public boolean filePathIndex = true;
 
-    Command(){
-        
+    Command() {
+
     }
+
     public void parse(String[] args) {
         if (args.length == 0) {
             System.out.println(prompt);
             return;
         }
-        this.userUrl = args[0];
+        this.userInputUrl = args[0];
         for (int i = 1; i < args.length; i++) {
             int index = i;
             index++;
@@ -34,8 +35,8 @@ public class Command {
                     this.fileNameIndex = false;
                     break;
                 case 's':
-                    this.saveAdd = args[++i];
-                    this.saveAddIndex = false;
+                    this.filePath = args[++i];
+                    this.filePathIndex = false;
                     break;
                 default:
                 }
