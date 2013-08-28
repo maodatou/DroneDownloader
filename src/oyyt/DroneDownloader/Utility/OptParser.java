@@ -145,6 +145,7 @@ class Option {
     public final boolean single;
     public final boolean mandatory;
 
+    //这里为什么要有private的构造函数呢？
     private Option() {
         this.shortArg = '\0';
         this.name = null;

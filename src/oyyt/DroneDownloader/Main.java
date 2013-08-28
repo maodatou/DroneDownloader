@@ -7,6 +7,7 @@ package oyyt.DroneDownloader;
 
 import oyyt.DroneDownloader.Downloader.DownloadTask;
 import oyyt.DroneDownloader.Downloader.State;
+import oyyt.DroneDownloader.Gui.DownloadGui;
 import oyyt.DroneDownloader.Utility.OptParser;
 import oyyt.DroneDownloader.Utility.Utility;
 
@@ -15,7 +16,9 @@ import oyyt.DroneDownloader.Utility.Utility;
  */
 public class Main {
     public static void main(String[] args) {
-        // parse option
+    
+/*   	
+    	// parse option
         OptParser optParser = new OptParser();
         optParser.addDefaultOpt("url", "The URL to be downloaded.", true);
         optParser.addOpt('d', "dir", "save file in dir.", false, false);
@@ -44,34 +47,14 @@ public class Main {
         String dir = optParser.getOption("dir", null);
         String filename = optParser.getOption("filename", null);
         boolean resume = optParser.getBooleanOption("continue");
+*/
+//    	DownloadGui user = new DownloadGui();
+//    	user.init();
+    	
+    	
+    	DownloadGui downloadGui =  new DownloadGui();
+    	downloadGui.init();
 
-        // start download and print information.
-        DownloadTask task = new DownloadTask(url, dir, filename, resume);
-        task.start();
-
-        do {
-            State state = task.getState();
-            if (state == State.FINISH) {
-                System.out.println("\nFINISH");
-                break;
-            }
-
-            if (state == State.ERROR) {
-                System.out.println("\nError:\n\t" + task.getErrorMsg());
-                break;
-            }
-
-            if (state == State.DOWNLOADING) {
-                System.out.print("\r" + task.getFileName() + ": ");
-                System.out.print("\t" + Utility.formatSpeed(task.getSpeed()));
-                System.out.print(String.format("\t%3d%%", task.getPercentage()));
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                System.err.println("Thread is interrupted.");
-            }
-        } while(true);
     }
+
 }

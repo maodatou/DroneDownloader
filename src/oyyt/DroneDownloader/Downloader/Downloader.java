@@ -28,21 +28,25 @@ class Downloader implements Runnable {
     private final String fileAbsPath;
     private final long startPos;
     private final long length;
+   
 
     private volatile long curPos;
+    private long fileLength;
     private volatile State state = State.INIT;
 
-    Downloader(String url, String fileAbsPath, long startPos, long length) {
+    Downloader(String url, String fileAbsPath, long startPos, long length,long fileLength) {
         this.url = url;
         this.fileAbsPath = fileAbsPath;
         this.startPos = startPos;
         this.length = length;
         this.curPos = startPos;
+        this.fileLength = fileLength;
     }
 
     @Override
     public void run() {
         download();
+        
     }
 
     public State getState() {
@@ -56,13 +60,19 @@ class Downloader implements Runnable {
     private void download() {
         int retry = 0;
         state = State.DOWNLOADING;
-
+        System.out.println(Thread.currentThread().getName());
         do {
             try {
                 URL URL = new URL(url);
                 HttpURLConnection conn = (HttpURLConnection) URL.openConnection();
                 conn.setConnectTimeout(TIME_OUT);
-                conn.setRequestProperty("Range", "bytes=" + curPos + "-" + (startPos+length));
+                long end = startPos + length;
+                if (startPos + length > fileLength){
+                    end = fileLength;
+                    System.out.println("end:"+end);
+                }
+                System.out .println("curPos: " + curPos + "end: " + end + "Thread" + Thread.currentThread().getName());
+                conn.setRequestProperty("Range", "bytes=" + curPos + "-" + end);
                 conn.connect();
 
                 RandomAccessFile file = new RandomAccessFile(fileAbsPath, "rw");
@@ -78,11 +88,12 @@ class Downloader implements Runnable {
                     curPos += out.write(buffer);
                     buffer.clear();
                 }
-
+/*
                 if (curPos == startPos + length) {
                     state = State.FINISH;
                     break;
                 }
+                */
 
                 out.close();
                 in.close();

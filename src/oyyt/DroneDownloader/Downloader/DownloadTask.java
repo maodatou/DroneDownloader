@@ -15,6 +15,7 @@ import java.net.URL;
  * Download task to handle the information when downloading.
  */
 public class DownloadTask {
+	private final int threadNum;
     private String url;
     private String filePath;
     private String fileName;
@@ -24,6 +25,7 @@ public class DownloadTask {
     private String errorMsg = null;
     private long totalLength = 0;
     private long alreadyDownloaded = 0;
+    private long currentDownSize = 0;
 
     private Downloader downloader = null;
 
@@ -42,6 +44,7 @@ public class DownloadTask {
         this.filePath = filePath;
         this.fileName = fileName;
         this.resume = resume;
+        this.threadNum = 3;
     }
 
     public void start() {
@@ -49,13 +52,24 @@ public class DownloadTask {
             initURL();
             initFile();
             // TODO: use thread instead of runnable interface
-            if (downloader == null) {
+            for (int i = 0; i < threadNum; i++){
+            	state = State.DOWNLOADING;
+            	System.out.println("i");
+            	long startPos = alreadyDownloaded + currentDownSize * i;
+            	Downloader downloadThread;
+            	System.out.println("startPos: " + startPos);
+            	System.out.println(Thread.currentThread().getName());
+            	downloadThread= new Downloader(url, filePath + File.separator + fileName, startPos,currentDownSize,totalLength);
+            	new Thread(downloadThread).start();
+            }
+            /*if (downloader == null) {
                 downloader = new Downloader(url, filePath + File.separator + fileName,
                         alreadyDownloaded, totalLength - alreadyDownloaded);
                 Thread t = new Thread(downloader);
                 t.start();
                 state = State.DOWNLOADING;
             }
+            */
         } catch (DDException e) {
             state = State.ERROR;
             errorMsg = e.getMessage();
@@ -149,7 +163,15 @@ public class DownloadTask {
                 throw new DDException(ErrorCode.NET_ERROR, "HTTP response code is " + code);
             }
             totalLength = conn.getContentLength();
-            if (totalLength <= 0) {
+            if (alreadyDownloaded != 0){
+            	currentDownSize = (totalLength - alreadyDownloaded) / threadNum +1;
+            }
+            else{
+            	currentDownSize = totalLength / threadNum +1;
+            	System.out.println("currentDownSize: " + currentDownSize);
+            	System.out.println("totalLength: " + totalLength);
+            }            
+           if (totalLength <= 0) {
                 throw new DDException(ErrorCode.NET_ERROR, "Could not get content length");
             }
         } catch (MalformedURLException e) {
