@@ -5,6 +5,7 @@
 
 package oyyt.DroneDownloader;
 
+import oyyt.DroneDownloader.Data.SQLiteConnection;
 import oyyt.DroneDownloader.Downloader.DownloadTask;
 import oyyt.DroneDownloader.Downloader.State;
 import oyyt.DroneDownloader.Gui.DownloadGui;
@@ -51,10 +52,41 @@ public class Main {
 //    	DownloadGui user = new DownloadGui();
 //    	user.init();
     	
-    	
+  //      new SQLiteConnection().init();
+        SQLiteConnection sqlite = new SQLiteConnection();
+        sqlite.init();
     	DownloadGui downloadGui =  new DownloadGui();
     	downloadGui.init();
 
     }
 
 }
+
+
+/*
+do {
+    State state = task.getState();
+    if (state == State.FINISH) {
+        System.out.println("\nFINISH");
+        break;
+    }
+
+    if (state == State.ERROR) {
+        System.out.println("\nError:\n\t" + task.getErrorMsg());
+        break;
+    }
+
+    if (state == State.DOWNLOADING) {
+        System.out.print("\r" + task.getFileName() + ": ");
+        System.out.print("\t" + Utility.formatSpeed(task.getSpeed()));
+        System.out.print(String.format("\t%3d%%", task.getPercentage()));
+    }
+
+    try {
+        Thread.sleep(1000);
+    } catch (InterruptedException e1) {
+        System.err.println("Thread is interrupted.");
+    }
+}
+while(true);
+*/ 

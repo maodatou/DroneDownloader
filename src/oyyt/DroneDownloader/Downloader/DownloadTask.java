@@ -16,7 +16,7 @@ import java.net.URL;
  */
 public class DownloadTask {
 	private final int threadNum;
-    private String url;
+    private String url ;
     private String filePath;
     private String fileName;
     private boolean resume;
@@ -62,14 +62,6 @@ public class DownloadTask {
             	downloadThread= new Downloader(url, filePath + File.separator + fileName, startPos,currentDownSize,totalLength);
             	new Thread(downloadThread).start();
             }
-            /*if (downloader == null) {
-                downloader = new Downloader(url, filePath + File.separator + fileName,
-                        alreadyDownloaded, totalLength - alreadyDownloaded);
-                Thread t = new Thread(downloader);
-                t.start();
-                state = State.DOWNLOADING;
-            }
-            */
         } catch (DDException e) {
             state = State.ERROR;
             errorMsg = e.getMessage();
@@ -167,7 +159,7 @@ public class DownloadTask {
             	currentDownSize = (totalLength - alreadyDownloaded) / threadNum +1;
             }
             else{
-            	currentDownSize = totalLength / threadNum +1;
+            	currentDownSize = totalLength / threadNum + 1;
             	System.out.println("currentDownSize: " + currentDownSize);
             	System.out.println("totalLength: " + totalLength);
             }            
